@@ -20,7 +20,14 @@
         <maven.deploy.skip>true</maven.deploy.skip><!-- needed to call mvn deploy without having a distributionManagement -->
         <matching.version>1.4</matching.version> <!-- version for all matching related packages -->
     </properties>
-        
+    
+    <!-- Accessing the resources:
+    - all files in "src/main/oaei-resources" folder are stored in the current working directory and can be accessed with 
+          Files.readAllLines(Paths.get("configuration_oaei.txt"));    
+    - all files in "src/main/resources" folder are compiled to the resulting jar and can be accessed with
+          getClass().getClassLoader().getResourceAsStream("configuration_jar.txt");
+    -->
+    
     <dependencies>
         <dependency>
             <groupId>de.uni_mannheim.informatik.dws.ontmatching</groupId>
@@ -149,12 +156,15 @@
             <id>maven.mannheim.releases</id>
             <url>https://breda.informatik.uni-mannheim.de/nexus/content/repositories/releases</url>
         </repository>
-        <repository>
-            <id>maven.mannheim.snapshots</id>
-            <url>https://breda.informatik.uni-mannheim.de/nexus/content/repositories/snapshots</url>
-        </repository>
     </repositories>
-
+    
+    <pluginRepositories>
+        <pluginRepository>
+            <id>maven.mannheim.releases</id>
+            <url>https://breda.informatik.uni-mannheim.de/nexus/content/repositories/releases</url>
+        </pluginRepository>
+    </pluginRepositories>
+    
 </project>
 
 <!-- config example for settings file which is usually located at ~/.m2/settings.xml (you can create the file if it does not exist)
