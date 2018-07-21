@@ -12,13 +12,13 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         
-        <oaei.mainClass>de.uni_mannheim.informatik.dws.ontmatching.demomatcher.DemoMatcher</oaei.mainClass><!-- mandatory: this class has to implement IOntologyMatchingToolBridge -->
+        <oaei.mainClass>de.uni_mannheim.informatik.dws.ontmatching.demomatcher.DemoMatcherJena</oaei.mainClass><!-- mandatory: this class has to implement IOntologyMatchingToolBridge -->
         
         <oaei.copyright>(C) Mannheim, 2018</oaei.copyright> <!--optional copyright appearing in the seals descriptor file -->
         <oaei.license>GNU Lesser General Public License 2.1 or above</oaei.license> <!--optional license appearing in the seals descriptor file -->
 
         <maven.deploy.skip>true</maven.deploy.skip><!-- needed to call mvn deploy without having a distributionManagement -->
-        <matching.version>1.4</matching.version> <!-- version for all matching related packages -->
+        <matching.version>1.6</matching.version> <!-- version for all matching related packages -->
     </properties>
     
     <!-- Accessing the resources:
@@ -29,6 +29,7 @@
     -->
     
     <dependencies>
+        <!-- dependency for jena matchers - for other matchers you can replace it with artifactId: matching-base -->
         <dependency>
             <groupId>de.uni_mannheim.informatik.dws.ontmatching</groupId>
             <artifactId>matching-jena</artifactId>
@@ -47,6 +48,12 @@
             <groupId>de.uni_mannheim.informatik.dws.ontmatching</groupId>
             <artifactId>hobbit-wrapper</artifactId>
             <version>${matching.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.25</version>
         </dependency>
     </dependencies>
 
@@ -94,7 +101,9 @@
                         <!-- in case you change the benchmarks, you also have to increase your version number -->
                         <benchmark>bench:AnatomyAPI</benchmark>
                         <benchmark>bench:ConferenceAPI</benchmark>
-                        <benchmark>http://w3id.org/bench#SpatialAPI</benchmark>
+                        <benchmark>bench:SpatialAPI</benchmark>
+                        <benchmark>bench:knowledgegraph</benchmark>
+                        <benchmark>bench:LargebioAPI</benchmark>
                     </benchmarks>
                 </configuration>
                 <executions>
@@ -108,7 +117,7 @@
             <plugin>
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
-                <version>0.24.0</version>                
+                <version>0.26.0</version>                
                 <configuration>
                     <!-- further machine configuration options: https://dmp.fabric8.io/#docker-machine -->
                     <machine><name>default</name></machine>
