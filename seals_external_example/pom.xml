@@ -1,0 +1,98 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>de.uni_mannheim.informatik.dws.ontmatching</groupId>
+    <artifactId>demo-external-matcher</artifactId><!-- id used as matcher id in descriptor file of seals package and as the project name in gitlab (hobbit) -->
+    <packaging>jar</packaging>
+    <version>1.0</version><!-- version appearing in descriptor file of seals package and system.ttl file in hobbit -->
+    <description>demo external matcher description</description><!-- description appearing in descriptor file of seals package and system.ttl file in hobbit -->
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        
+        <oaei.externalJavaMain>de.uni_mannheim.informatik.dws.ontmatching.demoexternalmatcher.Main</oaei.externalJavaMain>
+        
+        <oaei.copyright>(C) Mannheim, 2018</oaei.copyright> <!--optional copyright appearing in the seals descriptor file -->
+        <oaei.license>GNU Lesser General Public License 2.1 or above</oaei.license> <!--optional license appearing in the seals descriptor file -->
+
+        <matching.version>1.8</matching.version> <!-- version for all matching related packages -->
+    </properties>
+    
+    <!-- Accessing the resources:
+    - all files in "src/main/oaei-resources" folder are stored in the current working directory and can be accessed with 
+          Files.readAllLines(Paths.get("configuration_oaei.txt"));    
+    - all files in "src/main/resources" folder are compiled to the resulting jar and can be accessed with
+          getClass().getClassLoader().getResourceAsStream("configuration_jar.txt");
+    -->
+    
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+
+        
+        <!-- choose what libaries you need -->
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-arq</artifactId>
+            <version>3.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>de.uni_mannheim.informatik.dws.ontmatching</groupId>
+            <artifactId>yet-another-alignment-api</artifactId>
+            <version>${matching.version}</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+
+            <!-- the following plugin will generate a seals assemably -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.1.0</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>de.uni_mannheim.informatik.dws.ontmatching</groupId>
+                        <artifactId>seals-assembly</artifactId>
+                        <version>${matching.version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals><goal>single</goal></goals>
+                        <!-- when choosing seals_external it will generate a wrapper around a given process --> 
+                        <configuration><descriptorRefs><descriptorRef>seals_external</descriptorRef></descriptorRefs></configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>maven.mannheim.releases</id>
+            <url>https://breda.informatik.uni-mannheim.de/nexus/content/repositories/releases</url>
+        </repository>
+    </repositories>
+    
+    <pluginRepositories>
+        <pluginRepository>
+            <id>maven.mannheim.releases</id>
+            <url>https://breda.informatik.uni-mannheim.de/nexus/content/repositories/releases</url>
+        </pluginRepository>
+    </pluginRepositories>
+    
+</project>

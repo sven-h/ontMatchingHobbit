@@ -3,6 +3,7 @@ package de.uni_mannheim.informatik.dws.ontmatching.demomatcher;
 import de.uni_mannheim.informatik.dws.ontmatching.matchingbase.OaeiOptions;
 import de.uni_mannheim.informatik.dws.ontmatching.yetanotheralignmentapi.Mapping;
 import de.uni_mannheim.informatik.dws.ontmatching.matchingjena.MatcherJena;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Properties;
 import org.apache.jena.ontology.OntModel;
@@ -23,9 +24,38 @@ public class DemoMatcherJena extends MatcherJena{
     Accessing :
     */
     
+    private void print(){
+        /* Total number of processors or cores available to the JVM */
+        logger.info("Available processors (cores): " + Runtime.getRuntime().availableProcessors());
+
+        /* Total amount of free memory available to the JVM */
+        logger.info("Free memory (bytes): " + Runtime.getRuntime().freeMemory());
+
+        /* This will return Long.MAX_VALUE if there is no preset limit */
+        long maxMemory = Runtime.getRuntime().maxMemory();
+        /* Maximum amount of memory the JVM will attempt to use */
+        logger.info("Maximum memory (bytes): " + (maxMemory == Long.MAX_VALUE ? "no limit" : maxMemory));
+
+        /* Total memory currently available to the JVM */
+        logger.info("Total memory available to JVM (bytes): " + Runtime.getRuntime().totalMemory());
+
+        /* Get a list of all filesystem roots on this system */
+        File[] roots = File.listRoots();
+
+        /* For each filesystem root, print some info */
+        for (File root : roots) {
+          logger.info("File system root: " + root.getAbsolutePath());
+          logger.info("Total space (bytes): " + root.getTotalSpace());
+          logger.info("Free space (bytes): " + root.getFreeSpace());
+          logger.info("Usable space (bytes): " + root.getUsableSpace());
+        }
+    }
+    
     @Override
     public Mapping match(OntModel ont1, OntModel ont2, Mapping mapping, Properties p) {
         logger.info("Start matching");
+        
+        print();
         
         if(OaeiOptions.isMatchingClassesRequired())
             matchResources(ont1.listClasses(), ont2.listClasses(), mapping);
@@ -35,6 +65,9 @@ public class DemoMatcherJena extends MatcherJena{
         
         if(OaeiOptions.isMatchingObjectPropertiesRequired())
             matchResources(ont1.listObjectProperties(), ont2.listObjectProperties(), mapping);
+        
+        if(OaeiOptions.isMatchingDataPropertiesRequired() || OaeiOptions.isMatchingObjectPropertiesRequired())
+            matchResources(ont1.listAllOntProperties(), ont2.listAllOntProperties(), mapping); //for rdf:Properties
         
         if(OaeiOptions.isMatchingInstancesRequired())
             matchResources(ont1.listIndividuals(), ont2.listIndividuals(), mapping);
